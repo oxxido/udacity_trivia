@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from flask_cors import CORS
 import random
 
@@ -22,8 +23,9 @@ def create_app(test_config=None):
         ] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
 
     setup_db(app)
-
+    # pylint: disable=unused-variable
     # CORS Headers
+
     @app.after_request
     def after_request(response):
         response.headers.add(
@@ -36,8 +38,8 @@ def create_app(test_config=None):
         )
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-    
-    """ 
+
+    """
     get_formatted_categories
 
     Returns:
@@ -49,7 +51,9 @@ def create_app(test_config=None):
         if categories is None:
             return None
         else:
-            format_categories = [cat.format() for cat in categories]
+            format_categories = {
+                category.id: category.type for category in categories
+            }
             return format_categories
 
     '''
@@ -82,14 +86,10 @@ def create_app(test_config=None):
     pages. Clicking on the page numbers should update the questions.
     '''
 
-    @app.route('/questions')
+    @app.route('/questions', methods=['GET'])
     def get_questions():
-        if request.is_json:
-            body = request.get_json()
-            current_page = body.get('page', 1)
-        else:
-            current_page = 1
 
+        current_page = int(request.args.get('page', 1))
         questions = Question.query.paginate(
             current_page,
             QUESTIONS_PER_PAGE,
@@ -99,13 +99,12 @@ def create_app(test_config=None):
             abort(404)
         format_questions = [qt.format() for qt in questions.items]
         format_categories = get_formatted_categories()
-        array_categories = [cat['type'] for cat in format_categories]
         return jsonify({
             'success': True,
             'questions': format_questions,
             'current_page': current_page,
             'total_questions': questions.total,
-            'categories': array_categories,
+            'categories': format_categories,
         })
 
     '''
@@ -139,6 +138,25 @@ def create_app(test_config=None):
     Try using the word "title" to start.
     '''
 
+    @app.route('/questions', methods=['POST'])
+    def search_questions():
+        body = request.get_json()
+        search = body.get('searchTerm', '')
+
+        questions = Question.query.filter(
+            Question.question.ilike(
+                "%{0}%".format(search)
+            )
+        ).all()
+        format_questions = [qt.format() for qt in questions]
+
+        return jsonify({
+            'success': True,
+            "total_questions": len(format_questions),
+            "questions": format_questions,
+            "current_category": 0
+        })
+
     '''
     @TODO:
     Create a GET endpoint to get questions based on category.
@@ -147,7 +165,7 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that
     category to be shown.
     '''
-    
+
     @app.route('/categories/<int:category_id>/questions')
     def get_category_questions(category_id):
 
@@ -177,6 +195,35 @@ def create_app(test_config=None):
     and shown whether they were correct or not.
     '''
 
+    @app.route('/quizzes', methods=['POST'])
+    def play_quiz():
+
+        # Get category and prev questions
+        body = request.get_json()
+        category = body.get('quiz_category', None).get('id')
+        previous_questions = body.get('previous_questions', None)
+
+        # Both vars are requied, so if not provided return error
+        if category is None or previous_questions is None:
+            abort(400)
+        Q = Question.query
+
+        # if provided with category, added to the filter
+        if int(category) > 0:
+            Q = Question.query.filter(Question.category == category)
+
+        # Return first random question NOT IN previous questions
+        question = Q.filter(
+                ~Question.id.in_(previous_questions)
+            ).order_by(func.random()).first()
+
+        if question:
+            question = question.format()
+        return jsonify({
+                'success': True,
+                'question': question
+            })
+
     '''
     @TODO:
     Create error handlers for all expected errors
@@ -184,12 +231,28 @@ def create_app(test_config=None):
 
     '''
 
-    @app.errorhandler(404)
-    def not_found(error):
+    @app.errorhandler(400)
+    def err_malformed(error):
         return jsonify({
-            "success": False, 
+            "success": False,
+            "error": 400,
+            "message": "Malformed request"
+        }), 400
+
+    @app.errorhandler(404)
+    def err_not_found(error):
+        return jsonify({
+            "success": False,
             "error": 404,
-            "message": "resource not found"
+            "message": "Resource not found"
         }), 404
+
+    @app.errorhandler(405)
+    def err_not_allowed(error):
+        return jsonify({
+            "success": False,
+            "error": 405,
+            "message": "Method not allowed"
+        }), 405
 
     return app
