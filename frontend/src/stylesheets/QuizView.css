@@ -15,6 +15,10 @@
     font-weight: bold;
 }
 
+.play-category {
+    cursor: pointer;
+}
+
 .play-category:hover {
     color: dodgerblue;
 }
@@ -31,6 +35,24 @@
 div.button {
     margin-top: 20px;
     margin-left: calc(50% - 50px);
+}
+
+div.cat_label {
+    display: inline;
+}
+
+div.cat_image {
+    display: inline;
+}
+
+img.category {
+    width: 20px;
+    padding: 0 7px;
+
+}
+
+.vertical {
+    vertical-align: middle;
 }
 
 .quiz-question {

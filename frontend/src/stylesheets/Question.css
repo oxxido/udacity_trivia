@@ -6,10 +6,15 @@
 .categories-list {
   flex-basis: 25%;
   flex-shrink: 2;
+  margin-top: 20px;
 }
 
 .categories-list > form {
   width: 60%;
+}
+
+.categories-list > ul > li:hover {
+    color: dodgerblue;
 }
 
 .questions-list {
@@ -19,7 +24,7 @@
 
 .Question-holder {
   padding: 10px 20px;
-  border: 2px black solid;
+  border: 1px lightgrey solid;
   text-align: left;
   margin: 7px;
 }
@@ -28,29 +33,42 @@
   display: flex;
   flex-direction: row;
   height: 30px;
-  width: 200px;
+  width: 100%;
   align-items: center;
+  padding-left: 10px;
   justify-content: space-between;
+}
+
+.question-icon {
+  float: left;
 }
 
 .Question {
   font-size: 21px;
-  width: 100%;
+  float: left;
+  width: 90%;
+  line-height: 150%;
 }
 
+.question-actions {
+  float: right;
+}
+
+
+
 .answer-holder {
-  font-size: 25px;
+  font-size: 18px;
   height: 25px;
-  margin: 5px 0px;
+  margin: 5px 5px;
+  border: 1px lightskyblue solid;
+  padding: 10px 20px;
 }
 
 .show-answer {
   width: 100px;
   margin-top: 5px;
-  background-color: dodgerblue;
-  color: white;
-  padding: 3px 5px;
-  margin-left: 0px !important;
+  padding: 3px 10px;
+  cursor: pointer;
 }
 
 span.page-num {
@@ -66,10 +84,9 @@ span.page-num.active {
   color: blue;
 }
 
-img.category {
+img.delete {
   width: 30px;
 }
-
-img.delete {
-  width: 20px;
+img.delete:hover {
+  color:red;
 }

@@ -13,17 +13,32 @@
   color: dodgerblue;
 }
 
+.App-header > h1, h2 {
+  cursor: pointer;
+}
+
+.App-header > h2:hover {
+  color: dodgerblue;
+}
+.App-header > h1:hover {
+  color: white;
+}
+
+
 .App-intro {
   font-size: large;
 }
 
 h2 {
   text-align: center;
+  
 }
 
+
 li {
-  text-align: center;
-  margin: 5px 0px;
+  margin: 5px;
+  cursor: pointer;
+  margin-left: 20%;
 }
 
 ul {
@@ -36,4 +51,10 @@ form {
   flex-direction: column;
   width: 80%;
   margin: auto;
+}
+
+.logo {
+  width: 250px;
+  height: 125px;
+  cursor: pointer;
 }
