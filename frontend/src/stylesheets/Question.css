@@ -86,7 +86,12 @@ span.page-num.active {
 
 img.delete {
   width: 30px;
+  filter: opacity(0.5);
 }
 img.delete:hover {
-  color:red;
+  filter: opacity(1);
+}
+
+.question-actions:hover {
+  cursor: pointer;
 }
