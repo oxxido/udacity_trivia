@@ -30,9 +30,14 @@ class Question extends Component {
             />
         </div>
         <div className="Question-status">
-          
-          <div className="difficulty">Difficulty: {difficulty}</div>
-            
+          <div className="difficulty">
+              Difficulty: {difficulty} &nbsp;
+              <span 
+                className="show-answer" 
+                onClick={() => this.flipVisibility()}>
+              {this.state.visibleAnswer ? 'Hide' : 'Show'} Answer
+              </span>
+        </div>
           
         </div>
         <div 
@@ -40,10 +45,7 @@ class Question extends Component {
           style={{"display": this.state.visibleAnswer ? 'block' : 'none'}}>
              <strong>Answer:</strong> {answer}
         </div>
-        <div className="show-answer"
-            onClick={() => this.flipVisibility()}>
-          {this.state.visibleAnswer ? 'Hide' : 'Show'} Answer
-        </div>
+        
       </div>
     );
   }

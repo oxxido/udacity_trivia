@@ -11,7 +11,8 @@ class FormView extends Component {
       answer: "",
       difficulty: 1,
       category: 1,
-      categories: {}
+      categories: {},
+      showSuccess: false,
     }
   }
 
@@ -50,6 +51,7 @@ class FormView extends Component {
       crossDomain: true,
       success: (result) => {
         document.getElementById("add-question-form").reset();
+        this.setState({ showSuccess: true });
         return;
       },
       error: (error) => {
@@ -60,44 +62,63 @@ class FormView extends Component {
   }
 
   handleChange = (event) => {
-    this.setState({[event.target.name]: event.target.value})
+    this.setState({ showSuccess: false })
+  }
+
+  hideAlert = () => {
+    this.setState({visibleAnswer: !this.state.visibleAnswer});
   }
 
   render() {
     return (
       <div id="add-form">
         <h2>Add a New Trivia Question</h2>
-        <form className="form-view" id="add-question-form" onSubmit={this.submitQuestion}>
-          <label>
-            Question
-            <input type="text" name="question" onChange={this.handleChange}/>
-          </label>
-          <label>
-            Answer
-            <input type="text" name="answer" onChange={this.handleChange}/>
-          </label>
-          <label>
-            Difficulty
-            <select name="difficulty" onChange={this.handleChange}>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </label>
-          <label>
-            Category
-            <select name="category" onChange={this.handleChange}>
-              {Object.keys(this.state.categories).map(id => {
+        <div className="content">
+        <div className="pure-alert"
+          style={this.state.showSuccess ? {} : { display: 'none' }}
+          onClick={() => this.hideAlert()} >
+            <label>Trivia Question Succesfully Added</label>
+        </div>
+        <form className="pure-form pure-form-aligned" id="add-question-form" onSubmit={this.submitQuestion}>
+          <fieldset>
+            <div className="pure-control-group">
+              <label htmlFor="question">Question</label>
+              <input type="text" name="question" className="pure-input-2-3"
+                id="question" placeholder="Add your question"
+                onChange={this.handleChange} required="required"/>
+            </div>
+            <div className="pure-control-group">
+              <label htmlFor="answer">Answer</label>
+              <input type="text" name="answer" 
+                id="answer" placeholder="Add your answer" 
+                onChange={this.handleChange} required="required"/>
+            </div>
+            <div className="pure-control-group">
+              <label htmlFor="difficulty">Difficulty</label>
+              <select name="difficulty" onChange={this.handleChange} className="pad_3">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div className="pure-control-group">
+              <label htmlFor="category">Category</label>
+              <select name="category" onChange={this.handleChange} className="pad_3">
+                {Object.keys(this.state.categories).map(id => {
                   return (
                     <option key={id} value={id}>{this.state.categories[id]}</option>
                   )
                 })}
-            </select>
-          </label>
-          <input type="submit" className="button" value="Submit" />
+              </select>
+            </div>
+            <div className="pure-controls">
+              <button type="submit" className="pure-button pure-button-primary">Submit</button>
+            </div>
+          </fieldset>
         </form>
+        </div>
       </div>
     );
   }

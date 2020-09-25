@@ -78,11 +78,10 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `/questions`, //TODO: update request URL
-      type: "POST",
+      url: `/questions?question=${searchTerm}`, //TODO: update request URL
+      type: "GET",
       dataType: 'json',
       contentType: 'application/json',
-      data: JSON.stringify({searchTerm: searchTerm}),
       xhrFields: {
         withCredentials: true
       },
@@ -140,22 +139,25 @@ class QuestionView extends Component {
               </li>
             ))}
           </ul>
-          <Search submitSearch={this.submitSearch}/>
         </div>
         <div className="questions-list">
           <h2>Questions</h2>
-          {this.state.questions.map((q, ind) => (
-            <Question
-              key={q.id}
-              question={q.question}
-              answer={q.answer}
-              category={this.state.categories[q.category]} 
-              difficulty={q.difficulty}
-              questionAction={this.questionAction(q.id)}
-            />
-          ))}
-          <div className="pagination-menu">
-            {this.createPagination()}
+          <div className="content">
+          <Search submitSearch={this.submitSearch}/>
+          
+            {this.state.questions.map((q, ind) => (
+              <Question
+                key={q.id}
+                question={q.question}
+                answer={q.answer}
+                category={this.state.categories[q.category]} 
+                difficulty={q.difficulty}
+                questionAction={this.questionAction(q.id)}
+              />
+            ))}
+            <div className="pagination-menu">
+              {this.createPagination()}
+            </div>
           </div>
         </div>
 
