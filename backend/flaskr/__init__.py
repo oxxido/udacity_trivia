@@ -90,7 +90,16 @@ def create_app(test_config=None):
     def get_questions():
 
         current_page = int(request.args.get('page', 1))
-        questions = Question.query.paginate(
+        search = request.args.get('question', None)
+        q = Question.query
+        if search:
+            q = q.filter(
+                Question.question.ilike(
+                    "%{0}%".format(search)
+                )
+            )
+
+        questions = q.paginate(
             current_page,
             QUESTIONS_PER_PAGE,
             False
@@ -139,23 +148,33 @@ def create_app(test_config=None):
     '''
 
     @app.route('/questions', methods=['POST'])
-    def search_questions():
+    def create_question():
         body = request.get_json()
-        search = body.get('searchTerm', '')
 
-        questions = Question.query.filter(
-            Question.question.ilike(
-                "%{0}%".format(search)
-            )
-        ).all()
-        format_questions = [qt.format() for qt in questions]
+        new_question = body.get('question', None)
+        new_answer = body.get('answer', None)
+        new_difficulty = body.get('difficulty', None)
+        new_category = body.get('category', None)
 
-        return jsonify({
-            'success': True,
-            "total_questions": len(format_questions),
-            "questions": format_questions,
-            "current_category": 0
-        })
+        try:
+            if new_question and new_answer:
+                question = Question(
+                    question=new_question,
+                    answer=new_answer,
+                    difficulty=new_difficulty,
+                    category=new_category
+                )
+                question.insert()
+
+                return jsonify({
+                    'success': True,
+                    'created': question.id,
+                    'question': question.format()
+                })
+            else:
+                raise Exception("Parameters are Empty")
+        except:
+            abort(422)
 
     '''
     @TODO:
