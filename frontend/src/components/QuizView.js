@@ -124,8 +124,18 @@ class QuizView extends Component {
   renderFinalScore(){
     return(
       <div className="quiz-play-holder">
-        <div className="final-header"> Your Final Score is {this.state.numCorrect}</div>
-        <div className="play-again button" onClick={this.restartGame}> Play Again? </div>
+        <div className="final-header">
+          Your Final Score is <strong>{this.state.numCorrect}</strong>
+        </div>
+        <div>
+          <br />
+          <button type="button" 
+            className="pure-button pure-button-primary"
+            onClick={this.restartGame}
+          >
+            Play Again
+          </button>
+        </div>
       </div>
     )
   }
@@ -144,7 +154,14 @@ class QuizView extends Component {
         <div className="quiz-question">{this.state.currentQuestion.question}</div>
         <div className={`${evaluate ? 'correct' : 'wrong'}`}>{evaluate ? "You were correct!" : "You were incorrect"}</div>
         <div className="quiz-answer">{this.state.currentQuestion.answer}</div>
-        <div className="next-question button" onClick={this.getNextQuestion}> Next Question </div>
+        <br />
+        <button type="submit" 
+          className="pure-button pure-button-primary"
+          onClick={this.getNextQuestion}
+        >
+          Next Question
+        </button>
+
       </div>
     )
   }
@@ -156,11 +173,21 @@ class QuizView extends Component {
         ? this.renderCorrectAnswer()
         : (
           <div className="quiz-play-holder">
-            <div className="quiz-question">{this.state.currentQuestion.question}</div>
-            <form onSubmit={this.submitGuess}>
-              <input type="text" name="guess" onChange={this.handleChange}/>
-              <input className="submit-guess button" type="submit" value="Submit Answer" />
-            </form>
+            <div className="content">
+              <br />
+              <div className="quiz-question">{this.state.currentQuestion.question}</div>
+              <form className="pure-form" onSubmit={this.submitGuess}>
+                <fieldset>
+                  <input type="text" name="guess" onChange={this.handleChange}/>
+                  <br /> <br />
+                  <button type="submit" 
+                    className="pure-button pure-button-primary"
+                  >
+                    Submit Answer
+                  </button>
+                </fieldset>
+              </form>
+            </div>
           </div>
         )
   }

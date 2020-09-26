@@ -62,11 +62,12 @@ class FormView extends Component {
   }
 
   handleChange = (event) => {
-    this.setState({ showSuccess: false })
+    this.setState({[event.target.name]: event.target.value})
   }
 
   hideAlert = () => {
-    this.setState({visibleAnswer: !this.state.visibleAnswer});
+    // this.setState({visibleAnswer: !this.state.visibleAnswer});
+    this.setState({ showSuccess: false })
   }
 
   render() {
@@ -84,13 +85,13 @@ class FormView extends Component {
             <div className="pure-control-group">
               <label htmlFor="question">Question</label>
               <input type="text" name="question" className="pure-input-2-3"
-                id="question" placeholder="Add your question"
+                placeholder="Add your question"
                 onChange={this.handleChange} required="required"/>
             </div>
             <div className="pure-control-group">
               <label htmlFor="answer">Answer</label>
               <input type="text" name="answer" 
-                id="answer" placeholder="Add your answer" 
+                placeholder="Add your answer" 
                 onChange={this.handleChange} required="required"/>
             </div>
             <div className="pure-control-group">
