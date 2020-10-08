@@ -1,4 +1,4 @@
-#Udacity Trivia API Backend
+# Udacity Trivia API Backend
 
 Welcome to our Trivia API documentation. Follow the steps to install the trivia in your system
 
@@ -154,12 +154,14 @@ POST '/quizzes/'
  - **422:**
 	 - description: if it can't add the question
 + **Example request**
-		{
-			question: "Is the sun a planet?", 
-			answer: "no",
-			difficulty: 1,
-			category: "1"
-		}
+```
+{
+    question: "Is the sun a planet?", 
+    answer: "no",
+    difficulty: 1,
+    category: "1"
+}
+```
 
 &nbsp;
 
