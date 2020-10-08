@@ -61,7 +61,9 @@ def create_app(test_config=None):
         """ Categories route.
         get:
             summary: Category endpoint.
-            description: Get current categories
+            description: Fetches a dictionary of categories in which the keys
+            are the ids and the value is the corresponding string of the
+            category
 
             responses:
                 200:
@@ -148,6 +150,7 @@ def create_app(test_config=None):
                 - question_id: int
                     type: path parameter, ie: '/questions/4'
                     Desc: question db id
+                    required: yes
             responses:
                 200:
                     success: True,
@@ -347,5 +350,15 @@ def create_app(test_config=None):
             "error": 422,
             "message": "Unprocessable Entity"
         }), 422
+
+    # Rubric requires add error 500 but this won't be shown because if an error
+    # 500 occurs, the server won't execute properly this script
+    @app.errorhandler(500)
+    def err_internalserver(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "Internal server error"
+        }), 500
 
     return app
