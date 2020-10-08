@@ -45,11 +45,6 @@ class TriviaTestCase(unittest.TestCase):
         """Executed after reach test"""
         pass
 
-    """
-    TODO
-    Write at least one test for each test for successful operation and for
-    expected errors.
-    """
     def test_get_categories(self):
         res = self.client().get('/categories')
         data = json.loads(res.data)
@@ -137,7 +132,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['error'], 404)
         self.assertEqual(data['message'], 'Resource not found')
 
-    """
     def test_create_new_question(self):
         res = self.client().post('/questions', json=self.new_question)
         data = json.loads(res.data)
@@ -170,7 +164,7 @@ class TriviaTestCase(unittest.TestCase):
             self.assertEqual(str(data['deleted']), last_id)
             self.assertEqual(question, None)
         else:
-            self.assertFalse("No last question id") """
+            self.assertFalse("No last question id")
 
     def test_delete_unexisting_question(self):
         # to be allow to succesfully delete a book on each test we need
