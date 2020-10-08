@@ -56,7 +56,6 @@ def create_app(test_config=None):
             }
             return format_categories
 
-
     @app.route('/categories', methods=['GET'])
     def get_categories():
         """ Categories route.
@@ -90,9 +89,14 @@ def create_app(test_config=None):
             description: Get paginated questions. If a search string is
                 provided, it will return the seach result.
             parameters:
-                - Page: int 
+                - Page: int
                     type: GET arg: ie '?page=1'
                     Desc: Page Number
+                    required: no
+                - question: str
+                    type: GET arg: ie '?question=know'
+                    Desc: Search term. If present it will conduct a search
+                    required: no
             responses:
                 200:
                     success: True,
@@ -121,7 +125,7 @@ def create_app(test_config=None):
             QUESTIONS_PER_PAGE,
             False
         )
-        if questions is None:
+        if len(questions.items) == 0:
             abort(404)
         format_questions = [qt.format() for qt in questions.items]
         format_categories = get_formatted_categories()
@@ -134,14 +138,14 @@ def create_app(test_config=None):
         })
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
-    def delete_book(question_id):
+    def delete_question(question_id):
         """ Question Delete Route.
         DELETE:
             summary: Deletes a question.
             description: Seaches for a question based on an id
                 If found, it deletes the question.
             parameters:
-                - question_id: int 
+                - question_id: int
                     type: path parameter, ie: '/questions/4'
                     Desc: question db id
             responses:
@@ -226,7 +230,7 @@ def create_app(test_config=None):
             description: Return a list of questions
                 depending on the category
             parameters:
-                - cateogory id: int 
+                - cateogory id: int
                     type: path parameter, ie: '/categories/4/questions'
                     Desc: category db id
             responses:
@@ -242,8 +246,9 @@ def create_app(test_config=None):
         questions = Question.query.filter(
             Question.category == category_id
             ).all()
-        if questions is None:
+        if len(questions) == 0:
             abort(404)
+
         format_questions = [qt.format() for qt in questions]
         return jsonify({
             'success': True,
@@ -263,7 +268,7 @@ def create_app(test_config=None):
                 and that is not one of the previous questions, according
                 to a previous_question parameter.
             parameters:
-                - quiz_category id: int 
+                - quiz_category id: int
                     type: POST parameter
                     Desc: category db id
                     required: yes, but it can be empty
@@ -280,7 +285,12 @@ def create_app(test_config=None):
         """
         # Get category and prev questions
         body = request.get_json()
-        category = body.get('quiz_category', None).get('id')
+        if body is None:
+            abort(400)
+        quiz_cat = body.get('quiz_category', None)
+        if quiz_cat is None:
+            abort(400)
+        category = quiz_cat.get('id')
         previous_questions = body.get('previous_questions', None)
 
         # Both vars are requied, so if not provided return error
@@ -306,13 +316,6 @@ def create_app(test_config=None):
                 'question': question
             })
 
-    '''
-    @TODO:
-    Create error handlers for all expected errors
-    including 404 and 422.
-
-    '''
-
     @app.errorhandler(400)
     def err_malformed(error):
         return jsonify({
@@ -336,9 +339,9 @@ def create_app(test_config=None):
             "error": 405,
             "message": "Method not allowed"
         }), 405
-    
+
     @app.errorhandler(422)
-    def err_not_allowed(error):
+    def err_unprocessable(error):
         return jsonify({
             "success": False,
             "error": 422,
