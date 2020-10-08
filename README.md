@@ -1,44 +1,35 @@
-# Full Stack API Final Project
+# Udacity Category Trivia
 
-## Full Stack Trivia
+Welcome to our fun game of trivia. With this system you'll be able to load default question on setup, add and delete question and play our trivia.
 
-Udacity is invested in creating bonding experiences for its employees and students. A bunch of team members got the idea to hold trivia on a regular basis and created a  webpage to manage the trivia app and play the game, but their API experience is limited and still needs to be built out. 
+## Requirements:
 
-That's where you come in! Help them finish the trivia app so they can start holding trivia and seeing who's the most knowledgeable of the bunch. The application must:
+Our system is a Python/Flask/postgres backend with React frontend, your system should have installed:
+- Node and NPM. [More info](https://nodejs.org/es/download/ "More info")
+- Python 3.7. [More info](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python "More info")
+- PostgreSQL server. [More info](https://www.postgresql.org/ "More info")
+- PIP and Virtual Environment. [More info](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/ "More info")
 
-1) Display questions - both all questions and by category. Questions should show the question, category and difficulty rating by default and can show/hide the answer. 
-2) Delete questions.
-3) Add questions and require that they include question and answer text.
-4) Search for questions based on a text query string.
-5) Play the quiz game, randomizing either all questions or within a specific category. 
 
-Completing this trivia app will give you the ability to structure plan, implement, and test an API - skills essential for enabling your future applications to communicate with others. 
+## Install notes:
+Follow the steps on the frontend and backend folder to properly install the trivia in your system.
 
-## Tasks
+1. [`./frontend/readme.md`](./frontend/README.md)
+2. [`./backend/readme.md`](./backend/README.md)
 
-There are `TODO` comments throughout project. Start by reading the READMEs in:
-
-1. [`./frontend/`](./frontend/README.md)
-2. [`./backend/`](./backend/README.md)
-
-We recommend following the instructions in those files in order. This order will look familiar from our prior work in the course.
-
-## Starting and Submitting the Project
-
-[Fork](https://help.github.com/en/articles/fork-a-repo) the [project repository]() and [Clone](https://help.github.com/en/articles/cloning-a-repository) your forked repository to your machine. Work on the project locally and make sure to push all your changes to the remote repository before submitting the link to your repository in the Classroom. 
-
-## About the Stack
-
-We started the full stack application for you. It is desiged with some key functional areas:
-
-### Backend
-
-The `./backend` directory contains a partially completed Flask and SQLAlchemy server. You will work primarily in app.py to define your endpoints and can reference models.py for DB and SQLAlchemy setup. 
+## Enhacements from base project
 
 ### Frontend
 
-The `./frontend` directory contains a complete React frontend to consume the data from the Flask server. You will need to update the endpoints after you define them in the backend. Those areas are marked with TODO and can be searched for expediency. 
+- I added a CSS framework to help some specific ui details i like to improve
+- Changed the size, position and aligment of the menu
+- Created (downloaded) a logo
+- Changed sizes, spacing, cursor style, etc
+- Reworked each question on "list", changed position, added more style
+- Modified the search location and style
+- Modified the add new trivia
 
-Pay special attention to what data the frontend is expecting from each API response to help guide how you format your API. 
+### Backend
 
-[View the README.md within ./frontend for more details.](./frontend/README.md)
+- Requirements asked to "*... POST endpoint to get questions based on a search term.*" but i prefer to use **CRUD** recommendations and add the search to the GET request endpoint, and also because I manage to create an entire new behaviour (search question) by just adding a couple of lines of code.
+
