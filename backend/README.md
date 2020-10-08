@@ -1,26 +1,33 @@
-# Full Stack Trivia API Backend
+#Udacity Trivia API Backend
 
-## Getting Started
+Welcome to our Trivia API documentation. Follow the steps to install the trivia in your system
+
+
+## Requirements:
+
+Your system should have installed:
+
+- Node and NPM. [More info](https://nodejs.org/es/download/ "More info")
+- Python 3.7. [More info](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python "More info")
+- PostgreSQL server. [More info](https://www.postgresql.org/ "More info")
+- PIP and Virtual Environment. [More info](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/ "More info")
 
 ### Installing Dependencies
 
-#### Python 3.7
-
-Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
-
-#### Virtual Enviornment
-
-We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
-
-#### PIP Dependencies
-
-Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
-
+Activate your virtual environment and run
 ```bash
 pip install -r requirements.txt
 ```
 
 This will install all of the required packages we selected within the `requirements.txt` file.
+
+### Configuring your system
+
+Rename the example files and modify them to fit your needs:
+```bash
+mv .env_example .env
+mv .flaskenv_example .flaskenv
+```
 
 ##### Key Dependencies
 
@@ -31,9 +38,15 @@ This will install all of the required packages we selected within the `requireme
 - [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
 
 ## Database Setup
-With Postgres running, restore a database using the trivia.psql file provided. From the backend folder in terminal run:
+With Postgres running, create database and user running setup.psql and restore a database using the trivia.psql file provided. 
+
+Edit the setup.psql with the desire user info and pass, and run
 ```bash
-psql < setup.psql
+psql setup.psql
+```
+
+Then, in terminal run:
+```bash
 psql trivia < trivia.psql
 ```
 
@@ -44,52 +57,9 @@ From within the `backend` directory first ensure you are working using your crea
 To run the server, execute:
 
 ```bash
-export FLASK_APP=flaskr
-export FLASK_ENV=development
 flask run
 ```
-
-Setting the `FLASK_ENV` variable to `development` will detect file changes and restart the server automatically.
-
-Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
-
-## Tasks
-
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
-
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
-```
-
+(be sure to configure the .flaskenv file to set environment to dev and flask app to flaskr)
 
 ## Testing
 To run the tests, run
@@ -99,3 +69,143 @@ createdb trivia_test
 psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
+
+## API Reference
+
+**Endpoints**
+GET    '/categories'
+GET '/questions'
+DELETE '/questions/:id'
+POST '/questions'
+GET '/category/:id/questions'
+POST '/quizzes/'
+
++ **GET '/categories'**
+ - **Summary**: Category endpoint.
+ - **Description**: Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+ - **Responses:**
+ - **200:**
+	 - success: True
+	 - categories: Categories Array
+	 - count: amount of categories
+ - **404:**
+	 - description: if no categories on db.
+
+&nbsp;
+
++ **GET '/questions'**
+ - **Summary**: return array with questions
+ - **Description**: Get paginated questions. If a search string is provided, it will return the seach result.
+ + **Parameters**:
+      - **page**: int
+           - **type**: GET argument
+           - **Example**: '?page=1'
+           - **Desc**: Page Number
+           - **required**: no
+      - **question**: string
+           - **type**: GET arg: ie '?question=know'
+           - **Desc**: Search term. If present it will conduct a search
+           - **required**: no
+ - **Responses:**
+ - **200:**
+	 - success: True,
+	 - questions: array of formatted questions,
+	 - current_page: (int) current page,
+	 - total_questions: (int) total questions in db,
+	 - categories: format_categories
+ - **404:**
+	 - success: False,
+	 - message: error message.
+	 -  code: 404
+
+&nbsp;
+
++ **DELETE '/questions/:id'**
+ - **Summary**: Deletes a question.
+ - **Description**:  Seaches for a question based on an id. If found, it deletes the question
+ + **Parameters**:
+      - **id**: int
+           - **type**: path parameter
+           - **Example**: '/questions/4'
+           - **Desc**: question db id
+           - **required**: yes
+ - **Responses:**
+ - **200:**
+	 - success: True
+	 - deleted: int with deleted question id
+ - **422:**
+	 - description: if it can't delete the question or unexisting id.
+
+&nbsp;
+
++ **POST '/questions/'**
+ - **Summary**: Inserts a new question on db.
+ - **Description**: Takes vars from a form POST and insert the new question in db
+ + **Parameters**:
+      - **question**: text
+	  - **answer**: text
+	  - **difficulty**: int, 1 to 5
+	  - **category**: int, category id.
+ - **Responses:**
+ - **200:**
+	 - success: True
+	 - created: int with created question id
+	 - category: int, category id.
+ - **422:**
+	 - description: if it can't add the question
++ **Example request**
+		{
+			question: "Is the sun a planet?", 
+			answer: "no",
+			difficulty: 1,
+			category: "1"
+		}
+
+&nbsp;
+
++ **GET '/category/:id/questions'**
+ - **Summary**: Questions by category
+ - **Description**: Return a list of questions depending on the category
+ + **Parameters**:
+      - **page**: int
+           - **type**: Path parameter
+           - **Example**: '/categories/4/questions'
+           - **Desc**: category db id
+           - **required**: yes
+ - **Responses:**
+ - **200:**
+	 - success: True,
+	 - questions: array of formatted questions objects,
+	 - current_category: (int) current category,
+	 - total_questions: (int) total questions in db,
+	 - categories: format_categories
+ - **404:**
+	 - success: False,
+	 - message: error message.
+	 -  code: 404
+
+&nbsp;
+
++ **POST '/quizzes/'**
+ - **Summary**: Return a one question
+ - **Description**: This endpoint returns a question that belongs to a category, if category is provided and that is not one of the previous questions, according to a previous_question parameter
+ + **Parameters**:
+      - **quiz_category**: int
+           - **type**: POST parameter
+           - **Desc**: category db id
+           - **required**: yes, but it can be empty
+      - **previous_questions**: array
+           - **type**: POST parameter
+           - **Desc**: array of question ids (integers)
+           - **required**: yes, but it can be empty
+ - **Responses:**
+ - **200:**
+	 - success: True,
+	 - question: question object, empty if no question left
+ - **400:**
+	 - success: False,
+	 - message: error message.
+	 -  code: 400
+
+
+
